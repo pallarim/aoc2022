@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io::{BufReader, BufRead}, fs::File};
+use std::{io::{BufReader, BufRead}, fs::File};
 
 const PLAYER_A_ROCK: &str = "A";    
 const PLAYER_A_PAPER: &str = "B";
@@ -24,10 +24,10 @@ fn main() {
         let mut keypair = i.split_whitespace();
         let p1 = (*keypair.nth(0).expect("Impossible")).to_string();
         let p2 = (*keypair.nth(0).expect("Can happend")).to_string();
-
-        let result = get_result(&p1, &p2);
+        let p2_hand = get_hand(&p1, &p2);
+        let result = get_result(&p1, &p2_hand);
         player_a_total_points += get_hand_points(&p1);
-        player_b_total_points += get_hand_points(&p2);
+        player_b_total_points += get_hand_points(&p2_hand);
         if result == 1 {
             // player a win
             player_a_total_points += WIN_POINTS;
@@ -42,6 +42,30 @@ fn main() {
     }
 
     println!("Player a - Player b, {} - {}", player_a_total_points, player_b_total_points);
+}
+
+fn get_hand<'a>(p1: &'a str, p2: &'a str) -> &'a str {
+    return match p2{
+        PLAYER_B_PAPER => match p1 {
+            PLAYER_A_PAPER => PLAYER_B_PAPER,
+            PLAYER_A_ROCK => PLAYER_B_ROCK,
+            PLAYER_A_SCISSORS => PLAYER_B_SCISSORS,
+            _ => panic!()
+        },
+        PLAYER_B_ROCK => match p1 {
+            PLAYER_A_PAPER => PLAYER_B_ROCK,
+            PLAYER_A_ROCK => PLAYER_B_SCISSORS,
+            PLAYER_A_SCISSORS => PLAYER_B_PAPER,
+            _ => panic!()
+        },//lose
+        PLAYER_B_SCISSORS => match p1 {
+            PLAYER_A_PAPER => PLAYER_B_SCISSORS,
+            PLAYER_A_ROCK => PLAYER_B_PAPER,
+            PLAYER_A_SCISSORS => PLAYER_B_ROCK,
+            _ => panic!()
+        },//win
+        _ => panic!()
+    }
 }
 
 // fn get_strategy() -> HashMap<String, String>{
