@@ -11,18 +11,35 @@ fn main() {
 
 fn get_matches() -> Vec<char>{
     let mut input = Vec::new();
+    let mut all_lines = Vec::new();
     let file = File::open("input/actual.txt")
         .expect("File not found");
     let reader = BufReader::new(file);
     for l in reader.lines() {
         let line = l.expect("Can't parse line");
-        let (compartment_a, compartment_b) = line.split_at(line.len()/2);
-        let m_index = compartment_a.find(|a: char| compartment_b.find(a) != None).expect("No matches!");
-        let char_vec: Vec<char> = compartment_a.chars().collect();
-        let m = char_vec[m_index];
-        println!("Split to {} and {}. Found a match {}", compartment_a, compartment_b, m);
-        input.push(m);
+        all_lines.push(line);
     }
+    let mut i = 0;
+    let num_of_lines = all_lines.len();
+    let mut line_iter = all_lines.into_iter();
+    loop{
+        if i+3 > num_of_lines{
+            break;
+        }
+        let sack_a = line_iter.next().expect("Index over");
+        let sack_b = line_iter.next().expect("Index over");
+        let sack_c = line_iter.next().expect("Index over");
+
+        println!("Sacks {}, {}, {}", sack_a, sack_b, sack_c);
+        // let (compartment_a, compartment_b) = line.split_at(line.len()/2);
+        let m_index = sack_a.find(|a: char| sack_b.find(a) != None && sack_c.find(a) != None).expect("No matches!");
+        let char_vec: Vec<char> = sack_a.chars().collect();
+        let m = char_vec[m_index];
+        println!("Found a match {}", m);
+        input.push(m);
+        i+=3;
+    }
+
     return input;
 }
 
