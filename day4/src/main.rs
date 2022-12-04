@@ -7,7 +7,7 @@ fn main() {
         //check if fully contained
         let ai = &sections[i][0];
         let bi = &sections[i][1];
-        if ai.iter().all(|n| bi.contains(n)) || bi.iter().all(|n| ai.contains(n)){
+        if ai.iter().any(|n| bi.contains(n)) || bi.iter().any(|n| ai.contains(n)){
             fully_contains_count +=1;
             println!("Found a pair with i {}. Values {:?} and {:?}", i, ai, bi);
         }
